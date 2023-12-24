@@ -1,23 +1,20 @@
 import telebot
 import time
 
-# Создаем объект бота и токен
-bot = telebot.TeleBot('token_here')
+bot = telebot.TeleBot('6738640550:AAHeihlYWOwgbCnFUb6VkHXZeb-3uSRan1E')
 
 # Словарь для хранения статистики чата
 stats = {}
 
-# Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message, "Привет! Я бот для управления чатом. Напиши /help, чтобы узнать, что я умею.")
+    bot.reply_to(message, "первое сообщение")
 
 # Обработчик команды /help
 @bot.message_handler(commands=['help'])
 def help(message):
-    bot.reply_to(message, "/kick - кикнуть пользователя\n/mute - замутить пользователя на определенное время\n/unmute - размутить пользователя\n/stats - показать статистику чата\n/selfstat - показать свою статистику")
+    bot.reply_to(message, "потом добавлю")
 
-# Обработчик команды /kick
 @bot.message_handler(commands=['kick'])
 def kick_user(message):
     if message.reply_to_message:
@@ -32,7 +29,6 @@ def kick_user(message):
     else:
         bot.reply_to(message, "Эта команда должна быть использована в ответ на сообщение пользователя, которого вы хотите кикнуть.")
 
-# Обработчик команды /mute
 @bot.message_handler(commands=['mute'])
 def mute_user(message):
     if message.reply_to_message:
@@ -61,7 +57,6 @@ def mute_user(message):
     else:
         bot.reply_to(message, "Эта команда должна быть использована в ответ на сообщение пользователя, которого вы хотите замутить.")
 
-# Обработчик команды /unmute
 @bot.message_handler(commands=['unmute'])
 def unmute_user(message):
     if message.reply_to_message:
@@ -72,7 +67,6 @@ def unmute_user(message):
     else:
         bot.reply_to(message, "Эта команда должна быть использована в ответ на сообщение пользователя, которого вы хотите размутить.")
 
-# Обработчик команды /stats
 @bot.message_handler(commands=['stats'])
 def chat_stats(message):
     chat_id = message.chat.id
@@ -83,7 +77,6 @@ def chat_stats(message):
         unique_users = len(stats[chat_id]['users'])
         bot.reply_to(message, f"Статистика чата:\nВсего сообщений: {total_messages}\nУникальных пользователей: {unique_users}")
 
-# Обработчик команды /selfstat
 @bot.message_handler(commands=['selfstat'])
 def user_stats(message):
     chat_id = message.chat.id
@@ -102,26 +95,23 @@ def user_stats(message):
 
 bad_words = ['анкета', 'ссылка', 'уникальное предложение']
 
-# функция для проверки наличия запрещенных слов в сообщении
 def check_message(message):
     for word in bad_words:
         if word in message.text.lower():
             return True
     return False
 
-# обработчик сообщений
 @bot.message_handler(func=lambda message: True)
 def handle_message(message):
-    # проверяем сообщение на наличие запрещенных слов
+    
     if check_message(message):
-        # если есть хотя бы одно запрещенное слово, кикаем пользователя
+        
         bot.kick_chat_member(message.chat.id, message.from_user.id)
         bot.send_message(message.chat.id, f"Пользователь {message.from_user.username} был удален из чата за использование запрещенных слов")
     else:
-        # если запрещенных слов нет, обрабатываем сообщение дальше
+    
         print(message.text)
 
 
 
-# Запускаем бота
 bot.infinity_polling(none_stop=True)
